@@ -1,0 +1,37 @@
+{
+  "name": "openclaw-yt-media",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "OpenClaw plugin: stream YouTube media audio into Discord voice via yt-dlp, with speech ducking and self-mute/deafen tools",
+  "license": "MIT",
+  "author": "Patrick Magee",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pjmagee/openclaw-plugins.git",
+    "directory": "plugins/yt-media"
+  },
+  "files": [
+    "index.ts",
+    "media-player.ts",
+    "ytdlp.ts",
+    "voice-self-state.ts",
+    "dist/",
+    "bin/",
+    "openclaw.plugin.json",
+    "README.md"
+  ],
+  "keywords": [
+    "openclaw",
+    "openclaw-plugin",
+    "youtube",
+    "yt-dlp",
+    "discord",
+    "voice",
+    "music"
+  ],
+  "openclaw": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "id": "yt-media",
+  "name": "YouTube Media for Discord VC",
+  "version": "0.1.0",
+  "description": "Stream the audio of any YouTube media (music, videos, podcasts) into a Discord voice channel via yt-dlp — real audio, not TTS. Ducks for AI speech and auto-resumes.",
+  "enabledByDefault": true,
+  "activation": {
+    "onStartup": true
+  },
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "accountId": {
+        "type": "string",
+        "description": "Discord account id whose voice connection to reuse (default: default). The plugin plays into the openclaw:<accountId> voice connection group."
+      },
+      "cookiesPath": {
+        "type": "string",
+        "description": "Netscape cookie jar path inside the container (default /root/.openclaw/credentials/youtube-cookies.txt). Optional — without cookies, only freely available media plays."
+      },
+      "cookiesCommand": {
+        "type": "string",
+        "description": "Optional shell command that prints a fresh Netscape cookie jar to stdout (e.g. a password-manager reader script). When set, the jar is refreshed at load and when older than 6h. When unset, cookiesPath is used as-is if present."
+      },
+      "ytDlpPath": {
+        "type": "string",
+        "description": "yt-dlp binary (default: yt-dlp on PATH). Its directory is prepended to PATH for child processes."
+      },
+      "ffmpegPath": {
+        "type": "string",
+        "description": "ffmpeg binary with libopus (default: ffmpeg on PATH). Used to transcode to Ogg/Opus for Discord."
+      },
+      "cacheDir": {
+        "type": "string",
+        "description": "Download cache directory (default /root/.openclaw/media/yt-media-cache)"
+      }
+    }
+  },
+  "uiHints": {
+    "cookiesCommand": { "label": "Cookie refresh command", "sensitive": false }
+  },
+  "contracts": {
+    "tools": [
+      "media_play",
+      "media_skip",
+      "media_stop",
+      "media_status",
+      "voice_leave",
+      "voice_status",
+      "voice_mute",
+      "voice_deafen"
+    ]
+  }
+}
