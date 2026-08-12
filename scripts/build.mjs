@@ -13,6 +13,8 @@ for (const id of readdirSync("plugins")) {
   if (!existsSync(entry)) continue;
   // bundle:true so multi-file plugins (and any real deps) collapse into one
   // self-contained dist/index.js; node: builtins stay external via platform.
+  // The openclaw SDK stays external too: it exists only inside the gateway,
+  // which resolves it for loaded plugins (type-only imports erase anyway).
   await build({
     entryPoints: [entry],
     outfile: `plugins/${id}/dist/index.js`,
@@ -20,6 +22,7 @@ for (const id of readdirSync("plugins")) {
     platform: "node",
     target: "es2022",
     bundle: true,
+    external: ["openclaw", "openclaw/*"],
   });
   console.log(`built ${entry} -> plugins/${id}/dist/index.js`);
 }

@@ -1,0 +1,42 @@
+{
+  "name": "openclaw-xai-realtime-voice",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "OpenClaw plugin: xAI Grok realtime voice for Discord with local Whisper wake-gating, mic presence, speech ducking integration, and required 2026.7.x runtime patches",
+  "license": "MIT",
+  "author": "Patrick Magee",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pjmagee/openclaw-plugins.git",
+    "directory": "plugins/xai-realtime-voice"
+  },
+  "files": [
+    "index.ts",
+    "realtime-voice-provider.ts",
+    "local-wake-gate.ts",
+    "bridge-registry.ts",
+    "discord-voice-handle.ts",
+    "voice-presence.ts",
+    "processing-sound.ts",
+    "fetch-processing-sound.sh",
+    "patches/",
+    "dist/",
+    "openclaw.plugin.json",
+    "README.md"
+  ],
+  "keywords": [
+    "openclaw",
+    "openclaw-plugin",
+    "xai",
+    "grok",
+    "realtime-voice",
+    "discord",
+    "wake-word",
+    "whisper"
+  ],
+  "openclaw": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}

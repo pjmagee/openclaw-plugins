@@ -19,10 +19,7 @@ validation, `api.registerTool`, and text-result tool implementations.
 | [`redbot-control`](plugins/redbot-control) | Drive Red-DiscordBot (status, voice, play/skip/stop) over its official JSON-RPC | the bundled [`openclawrpc` cog](plugins/redbot-control/cog/openclawrpc) + a socat forwarder |
 | [`yt-media`](plugins/yt-media) | Stream YouTube media audio (music, videos, podcasts) into Discord voice, with AI-speech ducking and self-mute/deafen tools | `yt-dlp` + `ffmpeg` (libopus); optional cookie-refresh command |
 | [`whisper-wake-gate`](plugins/whisper-wake-gate) | Local wake-word gating: transcribe utterances on your own hardware, only act when the wake name matches — fail closed, tested spec | any OpenAI-compatible STT, e.g. [`speaches`](https://github.com/speaches-ai/speaches) or [`npu-stt`](https://github.com/pjmagee/unraid-apps/tree/main/containers/npu-stt) |
-
-More to come: the xAI realtime Discord voice bridge that consumes the wake
-gate (needs runtime patches on stock 2026.7.x — it will ship with that caveat
-documented).
+| [`xai-realtime-voice`](plugins/xai-realtime-voice) | The full wake-gated Grok voice stack for Discord: local wake-gating, mic presence, working-cue audio, speech-ducking integration — with the runtime patches stock 2026.7.x needs, documented honestly | xAI API key; the wake gate above; [patches](plugins/xai-realtime-voice/patches) for the gated flow |
 
 ## Installing
 
