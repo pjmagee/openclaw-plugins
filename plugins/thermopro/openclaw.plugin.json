@@ -1,7 +1,7 @@
 {
   "id": "thermopro",
   "name": "ThermoPro Room Sensors",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Read ThermoPro TP3x BLE room sensors via the thermopro-ble HTTP API.",
   "enabledByDefault": true,
   "activation": {

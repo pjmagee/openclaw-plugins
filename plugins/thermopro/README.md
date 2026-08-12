@@ -32,8 +32,8 @@ Grab the newest `thermopro-v*` release from the
 [Releases](https://github.com/pjmagee/openclaw-plugins/releases) page:
 
 ```bash
-curl -LO https://github.com/pjmagee/openclaw-plugins/releases/download/thermopro-v0.1.0/openclaw-thermopro-0.1.0.tgz
-openclaw plugins install ./openclaw-thermopro-0.1.0.tgz
+curl -LO https://github.com/pjmagee/openclaw-plugins/releases/download/thermopro-v0.1.1/openclaw-thermopro-0.1.1.tgz
+openclaw plugins install ./openclaw-thermopro-0.1.1.tgz
 ```
 
 ## Configure

@@ -31,8 +31,8 @@ install from the tarball — pinned URLs, so an unrelated plugin's release can
 never change what you download:
 
 ```bash
-curl -LO https://github.com/pjmagee/openclaw-plugins/releases/download/thermopro-v0.1.0/openclaw-thermopro-0.1.0.tgz
-openclaw plugins install ./openclaw-thermopro-0.1.0.tgz
+curl -LO https://github.com/pjmagee/openclaw-plugins/releases/download/thermopro-v0.1.1/openclaw-thermopro-0.1.1.tgz
+openclaw plugins install ./openclaw-thermopro-0.1.1.tgz
 ```
 
 Then enable and configure it in `openclaw.json`:
@@ -62,7 +62,10 @@ config schema and any companion services it talks to.
 plugins/<id>/
   openclaw.plugin.json   # manifest: id, name, version, configSchema
   package.json           # openclaw.extensions -> entry file(s)
-  index.ts               # entry (TypeScript is fine; OpenClaw loads it via jiti)
+  index.ts               # the source of truth — read this
+  dist/index.js          # transpiled at pack time (not committed): OpenClaw
+                         # loads .ts directly only for source checkouts and
+                         # link-installs; tarball installs require compiled JS
   README.md
 types/                   # minimal plugin-sdk type shim so CI can typecheck
                          # without installing the full openclaw package

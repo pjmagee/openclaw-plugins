@@ -20,6 +20,7 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run typecheck
+      - run: npm run build
       - name: Pack every plugin
         run: |
           set -euo pipefail
@@ -49,6 +50,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build
       - name: Pack tagged plugin and create release
         env:
           GH_TOKEN: ${{ github.token }}
