@@ -1,0 +1,25 @@
+{
+  "name": "openclaw-thermopro",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "OpenClaw plugin: read ThermoPro BLE room sensors via the thermopro-ble HTTP API",
+  "license": "MIT",
+  "author": "Patrick Magee",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pjmagee/openclaw-plugins.git",
+    "directory": "plugins/thermopro"
+  },
+  "keywords": [
+    "openclaw",
+    "openclaw-plugin",
+    "thermopro",
+    "ble",
+    "temperature"
+  ],
+  "openclaw": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}

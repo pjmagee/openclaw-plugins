@@ -1,0 +1,12 @@
+{
+  "name": "openclaw-plugins-workspace",
+  "private": true,
+  "description": "CI/dev tooling for the plugins in this repo — the plugins themselves are packed from plugins/<id>",
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "typescript": "^5.7.0"
+  }
+}

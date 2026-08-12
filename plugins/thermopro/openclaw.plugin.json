@@ -1,0 +1,29 @@
+{
+  "id": "thermopro",
+  "name": "ThermoPro Room Sensors",
+  "version": "0.1.0",
+  "description": "Read ThermoPro TP3x BLE room sensors via the thermopro-ble HTTP API.",
+  "enabledByDefault": true,
+  "activation": {
+    "onStartup": true
+  },
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "baseUrl": {
+        "type": "string",
+        "description": "thermopro-ble HTTP API base URL (default http://172.17.0.1:8102 — the Docker bridge gateway, i.e. the host as seen from inside the OpenClaw container)"
+      },
+      "timeoutMs": {
+        "type": "number",
+        "description": "HTTP request timeout in milliseconds (default 5000)"
+      }
+    }
+  },
+  "contracts": {
+    "tools": [
+      "thermopro_read"
+    ]
+  }
+}
