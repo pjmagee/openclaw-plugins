@@ -18,10 +18,11 @@ validation, `api.registerTool`, and text-result tool implementations.
 | [`thermopro`](plugins/thermopro) | Room temperature / humidity / battery readings from ThermoPro TP3x BLE sensors as an agent tool | [`thermopro-ble`](https://github.com/pjmagee/unraid-apps/tree/main/containers/thermopro-ble) (`ghcr.io/pjmagee/thermopro-ble`) |
 | [`redbot-control`](plugins/redbot-control) | Drive Red-DiscordBot (status, voice, play/skip/stop) over its official JSON-RPC | the bundled [`openclawrpc` cog](plugins/redbot-control/cog/openclawrpc) + a socat forwarder |
 | [`yt-media`](plugins/yt-media) | Stream YouTube media audio (music, videos, podcasts) into Discord voice, with AI-speech ducking and self-mute/deafen tools | `yt-dlp` + `ffmpeg` (libopus); optional cookie-refresh command |
+| [`whisper-wake-gate`](plugins/whisper-wake-gate) | Local wake-word gating: transcribe utterances on your own hardware, only act when the wake name matches — fail closed, tested spec | any OpenAI-compatible STT, e.g. [`speaches`](https://github.com/speaches-ai/speaches) or [`npu-stt`](https://github.com/pjmagee/unraid-apps/tree/main/containers/npu-stt) |
 
-More to come: a local-Whisper wake-word gate (pairs with
-[`npu-stt`](https://github.com/pjmagee/unraid-apps/tree/main/containers/npu-stt)
-for NPU-accelerated speech-to-text).
+More to come: the xAI realtime Discord voice bridge that consumes the wake
+gate (needs runtime patches on stock 2026.7.x — it will ship with that caveat
+documented).
 
 ## Installing
 

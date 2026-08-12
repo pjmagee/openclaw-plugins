@@ -1,0 +1,34 @@
+{
+  "name": "openclaw-whisper-wake-gate",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "OpenClaw plugin + canonical module for local Whisper wake-word gating against any OpenAI-compatible STT endpoint",
+  "license": "MIT",
+  "author": "Patrick Magee",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pjmagee/openclaw-plugins.git",
+    "directory": "plugins/whisper-wake-gate"
+  },
+  "files": [
+    "index.ts",
+    "wake-gate.ts",
+    "dist/",
+    "openclaw.plugin.json",
+    "README.md"
+  ],
+  "keywords": [
+    "openclaw",
+    "openclaw-plugin",
+    "whisper",
+    "wake-word",
+    "stt",
+    "speech-to-text",
+    "voice"
+  ],
+  "openclaw": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}

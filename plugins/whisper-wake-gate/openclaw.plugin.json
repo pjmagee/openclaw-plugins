@@ -1,0 +1,35 @@
+{
+  "id": "whisper-wake-gate",
+  "name": "Local Whisper Wake Gate",
+  "version": "0.1.0",
+  "description": "Wake-word gating against a local OpenAI-compatible Whisper endpoint: transcribe an utterance locally, only act when the wake name matches. Ships the canonical gate module plus wake_gate_check / wake_gate_status debug tools.",
+  "enabledByDefault": true,
+  "activation": {
+    "onStartup": true
+  },
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "speachesUrl": {
+        "type": "string",
+        "description": "OpenAI-compatible transcription server base URL (POST <url>/v1/audio/transcriptions). Bridged to OPENCLAW_SPEACHES_URL unless that env is already set — env always wins."
+      },
+      "speachesModel": {
+        "type": "string",
+        "description": "Transcription model id (default Systran/faster-distil-whisper-large-v3). Bridged to OPENCLAW_SPEACHES_MODEL."
+      },
+      "wakeNames": {
+        "type": ["string", "array"],
+        "items": { "type": "string" },
+        "description": "Wake names (comma-separated string or array). Bridged to OPENCLAW_WAKE_NAMES."
+      }
+    }
+  },
+  "contracts": {
+    "tools": [
+      "wake_gate_check",
+      "wake_gate_status"
+    ]
+  }
+}
