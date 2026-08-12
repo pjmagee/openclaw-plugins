@@ -16,9 +16,10 @@ validation, `api.registerTool`, and text-result tool implementations.
 | Plugin | What it does | Companion service |
 |--------|--------------|-------------------|
 | [`thermopro`](plugins/thermopro) | Room temperature / humidity / battery readings from ThermoPro TP3x BLE sensors as an agent tool | [`thermopro-ble`](https://github.com/pjmagee/unraid-apps/tree/main/containers/thermopro-ble) (`ghcr.io/pjmagee/thermopro-ble`) |
+| [`redbot-control`](plugins/redbot-control) | Drive Red-DiscordBot (status, voice, play/skip/stop) over its official JSON-RPC | the bundled [`openclawrpc` cog](plugins/redbot-control/cog/openclawrpc) + a socat forwarder |
 
-More to come: Red-DiscordBot RPC control, Discord VC music via yt-dlp, and a
-local-Whisper wake-word gate (pairs with
+More to come: Discord VC music via yt-dlp, and a local-Whisper wake-word gate
+(pairs with
 [`npu-stt`](https://github.com/pjmagee/unraid-apps/tree/main/containers/npu-stt)
 for NPU-accelerated speech-to-text).
 

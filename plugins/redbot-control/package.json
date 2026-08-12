@@ -1,0 +1,34 @@
+{
+  "name": "openclaw-redbot-control",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "OpenClaw plugin: control Red-DiscordBot via its official JSON-RPC, with the companion openclawrpc cog",
+  "license": "MIT",
+  "author": "Patrick Magee",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pjmagee/openclaw-plugins.git",
+    "directory": "plugins/redbot-control"
+  },
+  "files": [
+    "index.ts",
+    "rpc-client.ts",
+    "dist/",
+    "cog/",
+    "openclaw.plugin.json",
+    "README.md"
+  ],
+  "keywords": [
+    "openclaw",
+    "openclaw-plugin",
+    "red-discordbot",
+    "redbot",
+    "json-rpc",
+    "discord"
+  ],
+  "openclaw": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}

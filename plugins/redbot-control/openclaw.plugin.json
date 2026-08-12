@@ -1,0 +1,40 @@
+{
+  "id": "redbot-control",
+  "name": "RedBot RPC Control",
+  "version": "0.1.0",
+  "description": "Control Red-DiscordBot via its official JSON-RPC (status, join/leave VC, play/skip/stop). Opt-in by design: use only when the user explicitly asks for Red.",
+  "enabledByDefault": true,
+  "activation": {
+    "onStartup": true
+  },
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "rpcUrl": {
+        "type": "string",
+        "description": "WebSocket URL for Red RPC (default ws://172.17.0.1:6134 — the Docker bridge gateway; port 6134 is a socat forwarder to Red's loopback-only 6133)"
+      },
+      "timeoutMs": {
+        "type": "number",
+        "description": "RPC call timeout in milliseconds (default 15000)"
+      },
+      "usageHint": {
+        "type": "string",
+        "description": "Text prepended to every redbot_* tool description to steer the model. Default restricts the tools to explicit Red/Redbot requests; extend it if your agent has its own music tools the model should prefer."
+      }
+    }
+  },
+  "contracts": {
+    "tools": [
+      "redbot_status",
+      "redbot_voice_status",
+      "redbot_join",
+      "redbot_leave",
+      "redbot_play",
+      "redbot_skip",
+      "redbot_stop",
+      "redbot_now"
+    ]
+  }
+}

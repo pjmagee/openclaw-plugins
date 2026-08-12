@@ -1,0 +1,12 @@
+{
+  "author": ["pjmagee"],
+  "name": "OpenClawRpc",
+  "short": "RPC bridge so an OpenClaw agent can control Red (status, voice, audio).",
+  "description": "Registers official Red RPC handlers so OpenClaw agents can control Red without Discord command impersonation. Intended for explicit user requests only.",
+  "install_msg": "Loaded OpenClawRpc. Ensure Red is started with --rpc and a loopback forwarder if calling from another container.",
+  "hidden": true,
+  "min_bot_version": "3.5.0",
+  "tags": ["rpc", "openclaw", "bridge"],
+  "requirements": [],
+  "end_user_data_statement": "This cog does not persistently store data or metadata about users."
+}

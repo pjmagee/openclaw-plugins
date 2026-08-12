@@ -11,13 +11,15 @@ import { existsSync, readdirSync } from "node:fs";
 for (const id of readdirSync("plugins")) {
   const entry = `plugins/${id}/index.ts`;
   if (!existsSync(entry)) continue;
+  // bundle:true so multi-file plugins (and any real deps) collapse into one
+  // self-contained dist/index.js; node: builtins stay external via platform.
   await build({
     entryPoints: [entry],
     outfile: `plugins/${id}/dist/index.js`,
     format: "esm",
     platform: "node",
     target: "es2022",
-    bundle: false,
+    bundle: true,
   });
   console.log(`built ${entry} -> plugins/${id}/dist/index.js`);
 }
