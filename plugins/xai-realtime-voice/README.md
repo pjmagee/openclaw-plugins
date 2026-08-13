@@ -39,8 +39,8 @@ audio hook.
 ## Install
 
 ```bash
-curl -LO https://github.com/pjmagee/openclaw-plugins/releases/download/xai-realtime-voice-v1.0.0/openclaw-xai-realtime-voice-1.0.0.tgz
-openclaw plugins install ./openclaw-xai-realtime-voice-1.0.0.tgz
+curl -LO https://github.com/pjmagee/openclaw-plugins/releases/download/xai-realtime-voice-v1.1.0/openclaw-xai-realtime-voice-1.1.0.tgz
+openclaw plugins install ./openclaw-xai-realtime-voice-1.1.0.tgz
 # then, inside the gateway container:
 node ~/.openclaw/extensions/xai-realtime-voice/patches/apply-runtime-patches.js
 # restart the gateway, /vc leave + /vc join

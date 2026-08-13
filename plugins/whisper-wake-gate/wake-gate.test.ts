@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  buildInitialPrompt,
   expandWakeNames,
   joinFilteredSegments,
   matchWake,
@@ -33,6 +34,23 @@ describe("parseWakeNames", () => {
       "chillbot",
       "chill",
     ]);
+  });
+  it("falls back to the neutral default, never a bot-specific name", () => {
+    expect(parseWakeNames("")).toEqual(["assistant"]);
+  });
+});
+
+describe("buildInitialPrompt", () => {
+  it("derives vocabulary biasing from the configured names", () => {
+    expect(buildInitialPrompt(["chillbot", "chill bot"])).toBe(
+      "Chillbot. Chill bot. Hey Chillbot.",
+    );
+  });
+  it("caps at three names", () => {
+    expect(buildInitialPrompt(["a", "b", "c", "d"])).toBe("A. B. C. Hey A.");
+  });
+  it("returns empty for no names (prompt disabled)", () => {
+    expect(buildInitialPrompt([])).toBe("");
   });
 });
 

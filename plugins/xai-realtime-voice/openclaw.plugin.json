@@ -1,7 +1,7 @@
 {
   "id": "xai-realtime-voice",
   "name": "xAI Realtime Voice (Discord)",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Registers Grok Voice Agent (grok-voice-latest) as a RealtimeVoice provider for Discord agent-proxy, with local Whisper wake-gating, mic presence management, and a working-on-it audio cue. Requires runtime patches on stock OpenClaw 2026.7.x for the full wake-gated experience — see the README.",
   "enabledByDefault": true,
   "configSchema": {

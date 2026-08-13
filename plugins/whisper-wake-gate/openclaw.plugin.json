@@ -1,7 +1,7 @@
 {
   "id": "whisper-wake-gate",
   "name": "Local Whisper Wake Gate",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Wake-word gating against a local OpenAI-compatible Whisper endpoint: transcribe an utterance locally, only act when the wake name matches. Ships the canonical gate module plus wake_gate_check / wake_gate_status debug tools.",
   "enabledByDefault": true,
   "activation": {

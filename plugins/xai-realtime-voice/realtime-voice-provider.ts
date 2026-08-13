@@ -52,6 +52,7 @@ function resolveWsCtor(): new (url: string, opts?: Record<string, unknown>) => W
 import { registerBridge, unregisterBridge } from "./bridge-registry.js";
 import {
   callLocalWakeGate,
+  envOrFile,
   isConversationMode,
   isLocalWakeGateRequired,
   parseNameGateCommand,
@@ -84,11 +85,11 @@ function rewriteTranscriptForOpenClawWakeGate(params: {
 }): string {
   const raw = (params.text || "").trim();
   if (!raw) return raw;
-  const names = params.wakeNames.length ? params.wakeNames : ["chillbot"];
-  const canonical =
-    names.find((n) => n.toLowerCase() === "chillbot") ||
-    names.find((n) => n.toLowerCase().includes("chill")) ||
-    names[0];
+  // The configured names always come from resolveWakeNames() (env-driven, with
+  // a neutral default) — nothing bot-specific is hardcoded here. The FIRST
+  // configured name is canonical: it is what the rewrite prefixes.
+  const names = params.wakeNames.length ? params.wakeNames : resolveWakeNames();
+  const canonical = names[0] ?? "assistant";
   // Already contains a configured wake token as a WHOLE WORD → pass through.
   // Substring checks are not enough: with "chill" configured, a follow-up like
   // "it's chilly today" must be rewritten with the canonical prefix, not passed
@@ -97,8 +98,13 @@ function rewriteTranscriptForOpenClawWakeGate(params: {
     const nn = n.trim();
     if (nn && containsWholeWakeWord(raw, nn)) return raw;
   }
-  // Also accept common STT forms of chillbot that OpenClaw list may lack
-  if (/\bchill\s*bots?\b/i.test(raw) || /\bkillbot\b/i.test(raw) || /\bchilbot\b/i.test(raw)) {
+  // Rescue common STT mis-hears of chill-family names that the configured list
+  // may lack — only when such a name is actually configured, so deployments
+  // with unrelated wake names never rewrite random "killbot" mentions.
+  if (
+    names.some((n) => n.toLowerCase().includes("chill")) &&
+    (/\bchill\s*bots?\b/i.test(raw) || /\bkillbot\b/i.test(raw) || /\bchilbot\b/i.test(raw))
+  ) {
     const body = (params.cleaned || raw).replace(/^(killbot|chilbot|chill\s*bots?)[.,\s:-]*/i, "").trim();
     return body ? `${canonical}, ${body}` : canonical;
   }
@@ -125,10 +131,11 @@ function readVoiceFlag(name: string): boolean {
  * scanning every group anyway, so this only matters on a multi-VC gateway.
  */
 export function resolveVoiceAccountId(): string {
-  const v = (process.env.OPENCLAW_VOICE_ACCOUNT_ID || "").trim();
-  // Default reflects our deployment; the connection lookup's every-group scan
-  // makes it irrelevant on any single-VC gateway. Set the env for multi-VC.
-  return v || "chillbot";
+  // envOrFile so a value set only in the OpenClaw .env file still resolves.
+  // Neutral default: the connection lookup's every-group scan makes the exact
+  // id irrelevant on any single-VC gateway; set the env for multi-VC.
+  const v = (envOrFile("OPENCLAW_VOICE_ACCOUNT_ID") || "").trim();
+  return v || "default";
 }
 
 const DEFAULT_MODEL = "grok-voice-latest";

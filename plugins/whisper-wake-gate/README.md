@@ -34,9 +34,10 @@ This package is two things:
 
 What it deliberately is **not**: the audio plumbing. Feeding real mic audio
 into the gate requires a voice bridge that buffers PCM per speaker and calls
-`callLocalWakeGate()` on utterance close — ours lives in the
-`xai-realtime-voice` extension (publication pending; it needs runtime patches
-on stock OpenClaw 2026.7.x, which deserves its own honest README).
+`callLocalWakeGate()` on utterance close — that is
+[`xai-realtime-voice`](../xai-realtime-voice) in this repo, which embeds this
+module byte-identically (CI-enforced) and documents the runtime patches stock
+OpenClaw 2026.7.x needs.
 
 ## The STT backend
 
@@ -51,8 +52,8 @@ two, both public:
 ## Install
 
 ```bash
-curl -LO https://github.com/pjmagee/openclaw-plugins/releases/download/whisper-wake-gate-v0.1.0/openclaw-whisper-wake-gate-0.1.0.tgz
-openclaw plugins install ./openclaw-whisper-wake-gate-0.1.0.tgz
+curl -LO https://github.com/pjmagee/openclaw-plugins/releases/download/whisper-wake-gate-v0.2.0/openclaw-whisper-wake-gate-0.2.0.tgz
+openclaw plugins install ./openclaw-whisper-wake-gate-0.2.0.tgz
 ```
 
 ```json5

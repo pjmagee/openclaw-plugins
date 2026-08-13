@@ -91,8 +91,13 @@ function readOpenClawEnvFile(): Record<string, string> {
   return values;
 }
 
-/** process.env (when set non-empty) → .env file (non-empty) → undefined. */
-function envOrFile(name: string): string | undefined {
+/**
+ * process.env (when set non-empty) → .env file (non-empty) → undefined.
+ * Exported: consumers in the same package (e.g. a voice bridge) use it for
+ * their own settings so "OpenClaw does not reliably export .env to
+ * process.env" is solved in exactly one place.
+ */
+export function envOrFile(name: string): string | undefined {
   const fromEnv = process.env[name];
   if (typeof fromEnv === "string" && fromEnv.trim() !== "") return fromEnv;
   const fromFile = readOpenClawEnvFile()[name];
@@ -222,9 +227,7 @@ export function isLocalWakeGateRequired(): boolean {
 }
 
 export function resolveWakeNames(): string[] {
-  const raw =
-    envOrFile("OPENCLAW_WAKE_NAMES") ||
-    "chillbot,chill bot,chills bot,chill,chobot";
+  const raw = envOrFile("OPENCLAW_WAKE_NAMES") || DEFAULT_WAKE_NAMES_RAW;
   return raw
     .split(",")
     .map((s) => s.trim())
@@ -384,7 +387,14 @@ export function pcm16MonoToWav(pcm: Buffer, sampleRate: number): Buffer {
 // (Python truthiness, unconditional appends), not a file you can still read.
 // ---------------------------------------------------------------------------
 
-const DEFAULT_WAKE_NAMES_RAW = "chillbot,chill bot,chills bot,chill,chobot";
+/**
+ * Deliberately neutral: a deployment that never configured OPENCLAW_WAKE_NAMES
+ * gates on "assistant" rather than on some other operator's bot name. Set your
+ * real names via env/config — nothing bot-specific is hardcoded here.
+ * (resolveWakeNames above references this const; that is safe because it only
+ * runs after module evaluation completes.)
+ */
+const DEFAULT_WAKE_NAMES_RAW = "assistant";
 
 function defaultWakeNamesRaw(): string {
   return envOrFile("DEFAULT_WAKE_NAMES") || DEFAULT_WAKE_NAMES_RAW;
@@ -553,6 +563,22 @@ type SpeachesVerboseJson = {
 };
 
 /**
+ * Default Whisper initial prompt derived from the configured wake names —
+ * vocabulary biasing without a hardcoded bot name. "chillbot, chill bot" →
+ * "Chillbot. Chill bot. Hey Chillbot." Set WHISPER_INITIAL_PROMPT to override
+ * (empty = disable, matching app.py's `... or None`).
+ */
+export function buildInitialPrompt(names: string[]): string {
+  const caps = names
+    .slice(0, 3)
+    .map((n) => n.trim())
+    .filter(Boolean)
+    .map((n) => n.charAt(0).toUpperCase() + n.slice(1));
+  if (!caps.length) return "";
+  return `${caps.join(". ")}. Hey ${caps[0]}.`;
+}
+
+/**
  * app.py transcribe_array hallucination filter: drop segments whose Whisper
  * stats say "probably not speech AND low-confidence text" (noise → fake wake
  * words). Same env var names and defaults as the Python service.
@@ -591,9 +617,10 @@ async function transcribeViaSpeaches(params: {
 }): Promise<{ text: string; language: string; duration_sec: number; infer_sec: number; model: string }> {
   // Empty (not unset) disables each of these, exactly as app.py's `... or None`.
   const language = (envOrFileRaw("WHISPER_LANGUAGE") ?? "en").trim();
-  // Bias toward wake name vocabulary (helps "chillbot" vs random words)
+  // Bias toward wake name vocabulary (helps the wake word vs random words).
+  // Default derives from the configured names — no bot name is hardcoded.
   const initialPrompt = (
-    envOrFileRaw("WHISPER_INITIAL_PROMPT") ?? "Chillbot. Chill bot. Hey Chillbot."
+    envOrFileRaw("WHISPER_INITIAL_PROMPT") ?? buildInitialPrompt(resolveWakeNames())
   ).trim();
   const vadFilter = pythonBoolEnv("WHISPER_VAD_FILTER", "1");
 
