@@ -13,7 +13,7 @@ read the report before trusting anything.
 
 | Patch | Kind | What it fixes |
 |-------|------|---------------|
-| `wake-gate-xai` | bugfix | `requireWakeName` only activates for `provider.id === "openai"`; also allow `"xai"` |
+| `wake-gate-xai` | bugfix | `requireWakeName` only activates for `provider.id === "openai"`; also allow `"xai"` and `"xai-gated"` |
 | `capture-during-playback` | bugfix | With `bargeIn: false`, stock drops ALL mic capture while the AudioPlayer is playing — wake words over music went unheard |
 | `wake-followup-ttl` | tuning | Post-wake follow-up window 10s → 60s |
 | `speaker-context-recovery` | bugfix | Realtime consults could fire with no speaker context; recover pending/ignored-wake/last-known speaker |

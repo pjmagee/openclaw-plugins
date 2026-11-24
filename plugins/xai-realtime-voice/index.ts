@@ -2,6 +2,7 @@ import type { OpenClawPluginApi } from "openclaw/plugin-sdk/plugin-entry";
 import {
   buildXaiRealtimeVoiceProvider,
   resolveVoiceAccountId,
+  XAI_GATED_PROVIDER_ID,
 } from "./realtime-voice-provider.js";
 import { forEachActiveBridge } from "./bridge-registry.js";
 import {
@@ -88,7 +89,16 @@ function formatMicStatus(): string {
 }
 
 export default function register(api: OpenClawPluginApi) {
-  api.registerRealtimeVoiceProvider(buildXaiRealtimeVoiceProvider());
+  const registered = api.registerRealtimeVoiceProvider(buildXaiRealtimeVoiceProvider());
+  if (registered === false) {
+    api.logger?.error?.(
+      `[xai-realtime-voice] realtime provider ${XAI_GATED_PROVIDER_ID} was rejected (id already registered)`,
+    );
+  } else {
+    api.logger?.info?.(
+      `[xai-realtime-voice] registered realtime provider ${XAI_GATED_PROVIDER_ID}`,
+    );
+  }
 
   // /wakegate [seconds|off|default] — Discord slash + text command
   const registerCommand = (api as { registerCommand?: (cmd: unknown) => void }).registerCommand;

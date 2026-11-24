@@ -37,6 +37,7 @@ const APP_DIST = process.env.OPENCLAW_DIST || "/app/dist";
 // A target containing NONE of these is pristine upstream (e.g. right after an
 // npm/image update replaced the file) — used for .bak freshness, nothing else.
 const PATCH_MARKERS = [
+  'const supportsWakeNameGate = resolved.provider.id === "openai" || resolved.provider.id === "xai" || resolved.provider.id === "xai-gated";',
   'const supportsWakeNameGate = resolved.provider.id === "openai" || resolved.provider.id === "xai";',
   'if (this.params.accountId === "chillbot") return true;',
   'if(this.params.accountId==="chillbot")return true;',
@@ -159,10 +160,15 @@ function applyToText(text) {
 
   // --- wake-gate-xai ---
   const wakeNeedle = 'const supportsWakeNameGate = resolved.provider.id === "openai";';
-  const wakeRepl =
+  const wakeLegacy =
     'const supportsWakeNameGate = resolved.provider.id === "openai" || resolved.provider.id === "xai";';
+  const wakeRepl =
+    'const supportsWakeNameGate = resolved.provider.id === "openai" || resolved.provider.id === "xai" || resolved.provider.id === "xai-gated";';
   if (out.includes(wakeRepl)) {
     results.push({ id: "wake-gate-xai", status: "already" });
+  } else if (out.includes(wakeLegacy)) {
+    if (!CHECK_ONLY) out = out.replace(wakeLegacy, wakeRepl);
+    results.push({ id: "wake-gate-xai", status: CHECK_ONLY ? "needed" : "patched" });
   } else if (out.includes(wakeNeedle)) {
     if (!CHECK_ONLY) out = out.replace(wakeNeedle, wakeRepl);
     results.push({ id: "wake-gate-xai", status: CHECK_ONLY ? "needed" : "patched" });

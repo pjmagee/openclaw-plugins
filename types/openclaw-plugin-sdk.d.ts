@@ -39,8 +39,11 @@ declare module "openclaw/plugin-sdk/plugin-entry" {
       tool: OpenClawToolDefinition,
       opts?: { optional?: boolean },
     ): void;
-    /** Register a realtime voice provider (see openclaw/plugin-sdk/realtime-voice). */
-    registerRealtimeVoiceProvider(provider: unknown): void;
+    /**
+     * Register a realtime voice provider (see openclaw/plugin-sdk/realtime-voice).
+     * Returns false when the id is already taken. Older builds return void.
+     */
+    registerRealtimeVoiceProvider(provider: unknown): boolean | void;
     /** Gateway event hooks (subagent_ended, session lifecycle, …). */
     on(event: string, handler: (event: any, ctx: any) => void): void;
   };

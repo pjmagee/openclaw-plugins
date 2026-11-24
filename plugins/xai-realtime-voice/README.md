@@ -25,6 +25,16 @@ doesn't provide:
 - `/wakegate`, `/vcmic`, `/namegate` commands — follow-up window, mic
   management, and conversation mode (gate off) at runtime.
 
+## Provider id is `xai-gated`
+
+OpenClaw 2026.11+ ships its own realtime provider under the id `xai` and
+rejects a second registration of that id. That bundled provider also refuses
+Discord `agent-proxy` (`autoRespondToAudio: false`), which is how the wake
+gate keeps room audio from getting an automatic reply. This plugin therefore
+registers as **`xai-gated`**. Point `voice.realtime.provider` at `xai-gated`
+and put the API key under `voice.realtime.providers.xai-gated`. Leave Talk
+and other xAI features on the bundled `xai` provider.
+
 ## ⚠ Requires runtime patches on stock 2026.7.x
 
 This is the honest caveat: parts of the wake-gated flow live in
@@ -39,8 +49,8 @@ audio hook.
 ## Install
 
 ```bash
-curl -LO https://github.com/pjmagee/openclaw-plugins/releases/download/xai-realtime-voice-v1.1.0/openclaw-xai-realtime-voice-1.1.0.tgz
-openclaw plugins install ./openclaw-xai-realtime-voice-1.1.0.tgz
+curl -LO https://github.com/pjmagee/openclaw-plugins/releases/download/xai-realtime-voice-v1.2.0/openclaw-xai-realtime-voice-1.2.0.tgz
+openclaw plugins install ./openclaw-xai-realtime-voice-1.2.0.tgz
 # then, inside the gateway container:
 node ~/.openclaw/extensions/xai-realtime-voice/patches/apply-runtime-patches.js
 # restart the gateway, /vc leave + /vc join
@@ -56,12 +66,12 @@ channels: {
       mybot: {
         voice: {
           realtime: {
-            provider: "xai",
+            provider: "xai-gated",
             requireWakeName: true,
             wakeNames: ["mybot", "my bot"],
             bargeIn: false,             // needs the capture patch
             providers: {
-              xai: { interruptResponseOnInputAudio: false },
+              "xai-gated": { interruptResponseOnInputAudio: false },
             },
           },
         },

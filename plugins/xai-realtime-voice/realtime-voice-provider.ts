@@ -195,7 +195,7 @@ function requireApiKey(configured?: unknown): string {
   const key = resolveApiKey(configured);
   if (!key) {
     throw new Error(
-      "xAI API key missing for realtime voice. Set XAI_API_KEY (or providers.xai.apiKey).",
+      "xAI API key missing for realtime voice. Set XAI_API_KEY (or providers.xai-gated.apiKey).",
     );
   }
   return key;
@@ -1382,10 +1382,19 @@ function formatError(error: unknown): string {
   return String(error);
 }
 
+/**
+ * Provider id registered with OpenClaw.
+ * Must match `contracts.realtimeVoiceProviders` in openclaw.plugin.json.
+ * Not `xai`: OpenClaw 2026.11+ bundles its own realtime provider under that id
+ * and rejects a second registration. The bundled one also refuses agent-proxy
+ * (`autoRespondToAudio: false`), which is the wake-gated Discord mode.
+ */
+export const XAI_GATED_PROVIDER_ID = "xai-gated";
+
 export function buildXaiRealtimeVoiceProvider(): RealtimeVoiceProviderPlugin {
   return {
-    id: "xai",
-    label: "xAI Grok Realtime Voice",
+    id: XAI_GATED_PROVIDER_ID,
+    label: "xAI Grok Realtime Voice (wake-gated)",
     defaultModel: DEFAULT_MODEL,
     autoSelectOrder: 5,
     capabilities: {

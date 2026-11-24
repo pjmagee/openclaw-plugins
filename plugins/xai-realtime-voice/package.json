@@ -1,8 +1,8 @@
 {
   "name": "openclaw-xai-realtime-voice",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "type": "module",
-  "description": "OpenClaw plugin: xAI Grok realtime voice for Discord with local Whisper wake-gating, mic presence, speech ducking integration, and required 2026.7.x runtime patches",
+  "description": "OpenClaw plugin: wake-gated xAI Grok realtime voice for Discord (provider id xai-gated). Local Whisper wake-gating, mic presence, and speech ducking. The id avoids the bundled xai provider shipped in OpenClaw 2026.11+, which refuses agent-proxy.",
   "license": "MIT",
   "author": "Patrick Magee",
   "repository": {
