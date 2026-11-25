@@ -3,8 +3,9 @@
 Gives your agents `media_play` / `media_skip` / `media_stop` / `media_status`:
 stream the **audio of any YouTube media** — music, videos, podcasts — into the
 bot's Discord voice channel as real audio (not TTS), plus voice-connection
-self-control tools (`voice_leave` / `voice_status` / `voice_mute` /
-`voice_deafen`).
+self-control tools (`voice_join` / `voice_leave` / `voice_status` /
+`voice_mute` / `voice_deafen`). `voice_join` and `voice_leave` call the
+same Discord voice manager as `/vc join` and `/vc leave`.
 
 The interesting part is not the downloading — it's coexisting with an AI voice
 on the **same** Discord audio player:
@@ -28,7 +29,7 @@ on the **same** Discord audio player:
 |-------|-----|
 | `yt-dlp` | resolve + download media (Node used for its JS challenge runtime) |
 | `ffmpeg` **with libopus** | transcode/seek to Ogg/Opus — Discord-ready without a Node opus encoder |
-| An OpenClaw Discord account already in a voice channel | the plugin reuses the existing `openclaw:<accountId>` voice connection; it does not join by itself |
+| Discord voice enabled on the account | `voice_join` starts the realtime session; playback reuses that `openclaw:<accountId>` connection |
 | YouTube cookies (optional) | Premium / age-gated / member content; without them, freely available media still plays |
 
 ## Install
@@ -37,7 +38,7 @@ Grab the newest `yt-media-v*` release from the
 [Releases](https://github.com/pjmagee/openclaw-plugins/releases) page:
 
 ```bash
-curl -LO https://github.com/pjmagee/openclaw-plugins/releases/download/yt-media-v0.1.0/openclaw-yt-media-0.1.0.tgz
+curl -LO https://github.com/pjmagee/openclaw-plugins/releases/download/yt-media-v0.1.1/openclaw-yt-media-0.1.1.tgz
 openclaw plugins install ./openclaw-yt-media-0.1.0.tgz
 ```
 

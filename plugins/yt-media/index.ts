@@ -11,6 +11,7 @@ import {
   setSelfDeafened,
   setSelfMuted,
 } from "./voice-self-state.js";
+import { readVoiceManager, resolveJoinTarget } from "./voice-session.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -271,10 +272,68 @@ export default function register(api: OpenClawPluginApi) {
 
   api.registerTool(
     {
+      name: "voice_join",
+      label: "Join a Discord voice channel",
+      description:
+        "Join a Discord voice channel as this bot and start realtime voice. Call this when someone says join, hop in, come to voice, or get in the call. Do not tell them to run /vc join. Pass user_id to join the voice channel that person is already in. Or pass channel_id plus guild_id, or channel_name. One target is enough.",
+      parameters: {
+        type: "object",
+        additionalProperties: false,
+        properties: {
+          user_id: {
+            type: "string",
+            description: "Discord user id already in the voice channel to join",
+          },
+          guild_id: {
+            type: "string",
+            description: "Discord guild id. Required with channel_id. Optional with user_id or channel_name when only one match exists.",
+          },
+          channel_id: {
+            type: "string",
+            description: "Voice channel id to join. Requires guild_id.",
+          },
+          channel_name: {
+            type: "string",
+            description: "Voice channel name, such as Hangout.",
+          },
+        },
+      },
+      async execute(
+        _id: string,
+        params: { user_id?: string; guild_id?: string; channel_id?: string; channel_name?: string },
+      ) {
+        const manager = readVoiceManager(cfg.accountId);
+        if (!manager) {
+          return textResult(
+            `ERROR\nVoice manager for account ${cfg.accountId} is not running. Discord voice is not up yet.`,
+          );
+        }
+        const target = await resolveJoinTarget(manager.client, {
+          guildId: params.guild_id,
+          channelId: params.channel_id,
+          channelName: params.channel_name,
+          userId: params.user_id,
+        });
+        if (!target.ok) return textResult(`ERROR\n${target.message}`);
+        const result = await manager.join({ guildId: target.guildId, channelId: target.channelId });
+        const lines = [
+          result.ok === false ? "ERROR" : "OK",
+          result.message ?? `Joined guild ${target.guildId} channel ${target.channelId}`,
+          `guild: ${target.guildId}`,
+          `channel: ${target.channelId}`,
+        ];
+        return textResult(lines.join("\n"));
+      },
+    },
+    { optional: true },
+  );
+
+  api.registerTool(
+    {
       name: "voice_leave",
       label: "Leave Discord voice channel",
       description:
-        "Disconnect the bot from Discord voice (leave VC). Use when the user says disconnect, leave voice, hang up, get out of VC, stop listening, or goodbye from voice. Stops playback first, then destroys the voice connection. Prefer this over claiming you left — call the tool. Optional guild_id if multiple servers; otherwise leaves all voice connections for this account.",
+        "Disconnect this bot from Discord voice. Call this when the user says disconnect, leave, hang up, get out, or stop listening. Do not tell them to run /vc leave. Stops playback, then leaves through the Discord voice manager. Optional guild_id; omit to leave every voice channel this account is in.",
       parameters: {
         type: "object",
         additionalProperties: false,
@@ -286,10 +345,35 @@ export default function register(api: OpenClawPluginApi) {
         },
       },
       async execute(_id: string, params: { guild_id?: string }) {
-        const result = player.leaveVoice({
-          guildId: params.guild_id?.trim() || undefined,
-        });
-        // Leaving ends the session — never carry mute/deafen into the next join.
+        player.stop();
+        const guildId = params.guild_id?.trim() || undefined;
+        const manager = readVoiceManager(cfg.accountId);
+        if (manager) {
+          const sessions = manager.status().filter((entry) => !guildId || entry.guildId === guildId);
+          const targets = sessions.length
+            ? sessions
+            : guildId
+              ? [{ guildId, channelId: undefined }]
+              : [];
+          if (!targets.length) {
+            return textResult(["ERROR", "Not connected to a voice channel.", "left: none", ...selfStateLines()].join("\n"));
+          }
+          const lines: string[] = [];
+          let ok = true;
+          for (const target of targets) {
+            const result = await manager.leave({ guildId: target.guildId, channelId: target.channelId });
+            if (result.ok === false) ok = false;
+            lines.push(result.message ?? `Left guild ${target.guildId}`);
+          }
+          if (ok) {
+            setSelfMuted(false);
+            setSelfDeafened(false);
+          }
+          return textResult(
+            [ok ? "OK" : "ERROR", ...lines, `left: ${targets.map((t) => `${t.guildId}/${t.channelId ?? "?"}`).join(", ")}`, ...selfStateLines()].join("\n"),
+          );
+        }
+        const result = player.leaveVoice({ guildId });
         if (result.left.length) {
           setSelfMuted(false);
           setSelfDeafened(false);
@@ -443,6 +527,6 @@ export default function register(api: OpenClawPluginApi) {
   );
 
   api.logger?.info?.(
-    `[yt-media] registered media_* + voice_leave/status/mute/deafen account=${cfg.accountId} cookies=${cookiesMode(cfg)}`,
+    `[yt-media] registered media_* + voice_join/leave/status/mute/deafen account=${cfg.accountId} cookies=${cookiesMode(cfg)}`,
   );
 }
